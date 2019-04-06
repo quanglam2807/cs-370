@@ -1,0 +1,48 @@
+Quang Lam
+03/06/2019
+
+21. What are generics? Why are they convenient?
+- A generic class (or a generic) is usually a container of some type.
+- Generics let programmers re-use classes, especially classes that are designed as data structures like maps and vectors.
+
+22. What is a template? How do you declare a vector in C++?
+- A template is how C++ programmers write generic classes. 
+- In C++ you can declare a vector of int if you need to by writing
+vector<type> nameOfVector;
+
+23. What is auto-boxing and unboxing?
+- Auto-boxing means wrapping primitive types inside their associates classes so they can can serve as arguments to generics (because Java doesn't allow primitive types to serve as arguments).
+- Unboxing means unwrapping the associates classes back to primitive types.
+
+24. How is a function represented as a value in Java?
+- Java does not treat functions and methods as values but a class can simulate a function or method. So functions are represented as classes.
+
+25. What is an anonymous class?
+- An anonymous class is a class without name.
+
+26. What is the type(6) in JCoCo and Python? How about the type(type(6))? How
+about the type(type(type(6)))? Why isn’t it interesting to go any further?
+- type(6) is type<int>.
+- type(type(6)) and type(type(type(6))) is type<type>.
+- It isn't interesting to go any further because type of type<type> is just type<type>. So if we go further, we will get the same result again and again.
+
+27. The JCoCo scanner is based on a finite state machine. How is the finite state machine implemented? What are the major constructs used by a finite state
+machine?
+- The finite state machine consists of states and transitions between states depending on the characters read from the input file. The finite state machine accepts tokens of the CASM file.
+
+28. Does the JCoCo parser run bottom-up or top-down?
+- JCoCo parser runs top-down
+
+29. In JCoCo how are a PyCode object and a PyFunction object related?
+- PyCode objects are used to build PyFunction objects.
+
+30. What is a traceback and why is it important?
+- The traceback is a list of all the PyFrame objects that are popped until an exception handler is found.
+- It is important because traceback allows programmers to track down the sources of errors.
+
+31. What is the purpose of a PyMethod class?
+- PyMethod class implements calling a method (which are all PyFunctions found in the attrs variable) on an object.
+
+32. Arriving at hash values for hashable objects in Java is trivial. Describe how
+JCoCo determines hash values for objects in the implementation of PyDict objects.
+- JCoCo determines hash values for objects in the implementation of PyDict objects using HashMap, part of the utility library of Java (calling __hash__ magic method).

@@ -1,0 +1,41 @@
+Quang Lam
+02/03/2019
+
+11. Which environment has garbage collection built in, C++ or Java?
+- Java has garbage collection built it but C++ doesn't.
+
+12. What are the advantages of garbage collection?
+- Garbage collection automatically takes care of managing and freeing unused memory which saves programmers' time to manage it manually.
+
+13. Are there any drawbacks to garbage collection?
+- Garbage collection can lead to the possibility of memory leaks.
+- Garbage collection can impact the run-time performance of a system.
+- Run-time system that supports garbage collection has less access to the underlying hardware of the machine (or in other words, programmers have less control).
+
+14. What is a destructor and when is it needed?
+- Destructors are a feature of C++ that help programmers prevent memory leaks.
+- It is needed when take care of cleaning up instances of itself (i.e. objects of the class) when they are freed (as opposed to constructor).
+
+15. What do you have to write to get a polymorphic method in C++?
+- To get a polymorphic method in C++, we use virtual function table.
+- When a virtual function is called, there is an extra lookup of the function’s address because classes that inherit from this class may override any of the virtual functions.
+
+16. What is the purpose of polymorphism?
+- Polymorphism is the mechanism we employ to customize the behavior of code we have already written. 
+
+17. What is the purpose of inheritance?
+- Inheritance is the mechanism we employ to re-use code in software we are currently writing.
+
+18. How do interfaces and classes differ in Java? How are they similar? How are
+they different?
+- An interface is a promise to support certain methods in a class.
+- Classes can implement as many interfaces as they wish, which is the Java way of achieving multiple inheritance. 
+- Interfaces are in no way tied to the class hierarchy.
+
+19. What is an adapter class? Why are they useful?
+- Adapter class is a class that implements the interface and provides common code to several subclasses.
+- It is useful when multiple classes share identical interface.
+
+20. What is a callback and how are they usually implemented in Java?
+- A callback in java is a method that gets called when an event occurs.
+- They are usually implemented in Java using anonymous inner classes.

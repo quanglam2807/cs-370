@@ -1,0 +1,95 @@
+
+Quang Lam
+02/18/2019
+
+
+1. How do the Python virtual machine and JCoCo differ? Name three differences between the two implementations.
+- Python virtual machine supports multiple types of exceptions. JCoCo virtual machine currently only has one type of exception, called Exception.
+- Python virtual machine and JCoCo use difference presence of labels in the assembly language format (pyc or bytecode vs casm).
+- JCoCo differs from Python by requiring a main function where execution of a JCoCo assembled program begins. 
+- Python VM is written in C. JCoCo is written in Java.
+
+2. What is a disassembler?
+- A disassembler is a tool that will take a machine language program and produce an assembly language version of it.
+
+3. What is an assembler?
+- An assembler translates an assembly language program to machine language making the program ready to execute
+
+4. What is a stack frame? Where are they stored? What goes inside a stack frame?
+- A stack frame is what keeps the information about each function called while the program is executing.
+- Stack frames are stored in run-time stack.
+- Each stack frame contains all local variables that are defined in the function and two additional stacks (an operand stack and a block stack).
+
+5. What is the purpose of the block stack and where is it stored?
+- The block stack keeps track of exit points for blocks of code within a JCoCo function.
+- The block stack is stored in the stack frame.
+
+6. What is the purpose of the Program Counter?
+- Program Counter (PC) register kept track of the next instruction to execute.
+
+7. Name an instruction that is responsible for creating a list object and describe how it works.
+- BUILD_LIST instruction is responsible for creating a list object.
+- It pops the top the two operands from the stack, builds the list object, and pushes the resulting list on the operand stack.
+
+8. Describe the execution of the STORE_FAST and LOAD_FAST instructions.
+- STORE_FAST instruction stores a value in the locals list.
+- LOAD_FAST does the opposite of STORE_FAST, pushing a value to the operand stack from the locals list of variables.
+
+9. How can JCoCo read a line of input from the keyboard?
+- It uses a built-in function to read input from the keyboard.
+- Call LOAD_GLOBAL instruction to retrieve the built-in function, then call CALL_FUNCTION instruction to read the input.
+
+10. What is the difference between a disassembled Python program and an assembled JCoCo program? Provide a short example and point out the differences.
+- Disassembled Python program is in assembly language and cannot be executed by the machine. An assembled JCoCo program is machine code which can be execute by the machine.
+
+Example: disassembled Python program is the .casm file, generated using the Python library disassembler. Assembled JCoCo program is what is created when someone runs JCoco on that file. The former has block-stack labels, the later doesn't (replaced with actual PC target addresses). The former is easier to read by the programmers but not executable by the machine, while latter is harder to read but executable.
+
+11. When a Python while loop is implemented in JCoCo, what is the last instruction of the loop and what is its purpose?
+- The last instruction of the loop is the POP_BLOCK.
+- It is needed if the loop exits normally, not as the result of a break statement.
+
+12. What do exception handling and loops have in common in the JCoCo implementation?
+Both exception handling and loops have in common the way to implementing the "break instruction".
+
+13. What is lazy evaluation and why is it important to Python and JCoCo?
+- Lazy evaluation is when the next value in a sequence is generated only when it is ready to be used and not before.
+- Because thanks to this technique, Python and JCoCo don't need to eagerly generating a whole sequence even if some elements of the sequence might not be used (called eager evaluation). It helps saving memory to store the unused elements and time to generate them.
+
+14. What is a closure and why are closures needed?
+- A closure is the environment in which a function is defined and the code for the function itself.
+- Each function has its own separate environment so it is needed to have closures to keep not only the code of function but also the mentioned environment (including the local variables used by the function).
+
+15. How do you create an instance of a class in JCoCo? What instructions must be executed to create objects?
+- Starts with a line beginning with "Class: ", following the BEGIN keyword and ending with the END keyword. It needs to have a function named __init__ defined. 
+- To create an object, LOAD_GLOBAL instruction is called first to get the class function, then CALL_FUNCTION to run the function and create the object.
+
+16. Write a class, using JCoCo, and create some instances of the class.
+Class: Student
+BEGIN
+  Function: __init__/1
+  Constants: None, 4.0
+  Locals: self
+  Globals: grade
+  BEGIN
+    LOAD_CONST 1
+    LOAD_FAST 0
+    STORE_ATTR 0
+    LOAD_CONST 0
+    RETURN_VALUE
+  END
+END
+Function: main/0
+Constants: None
+Locals: student1, student2, student3
+Globals: Student
+BEGIN
+  LOAD_GLOBAL 0
+  CALL_FUNCTION 0
+  STORE_FAST 0
+  LOAD_GLOBAL 0
+  CALL_FUNCTION 0
+  STORE_FAST 1
+  LOAD_GLOBAL 0
+  CALL_FUNCTION 0
+  STORE_FAST 2
+END

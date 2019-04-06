@@ -1,0 +1,31 @@
+Quang Lam
+02/18/2019
+Chapter 3 - Exercise 1
+
+LOAD_CONST 1; 5
+
+STORE_FAST 0;
+
+LOAD_CONST 2; 6
+
+STORE_FAST 1;
+
+LOAD_GLOBAL 0; print
+
+LOAD_FAST 0; 5 print
+
+LOAD_FAST 1; 6 5 print
+
+COMPARE_OP; print
+
+POP_JUMP_IF_FALSE label00; print
+
+LOAD_FAST 0; 5 print
+
+JUMP_FORWARD label01; 5 print
+
+label00: LOAD_FAST: 1; 6 print
+
+label01: CALL_FUNCTION: 1;
+
+RETURN_VALUE;

@@ -1,0 +1,58 @@
+﻿Quang Lam
+
+1. What does the word syntax refer to? How does it differ from semantics?
+- Syntax:
+   - refers to how to write the symbols down in some meaningful order.
+   - determines the well-formed or grammatically correct programs of the language
+   - is how programs look.
+- Semantics
+   - referes to deriving meaning from what is written.
+   - determines how or whether programs will execute.
+   - is how programs work
+
+2. What is a token?
+A token is a symbol in a language.
+
+3. What is a nonterminal?
+A nonterminal (also called syntactic category) is a set of phrases, or strings of tokens, that will be defined in terms of symbols in the language.
+
+4. What does BNF stand for? What is its purpose?
+BNF stands for Backus Naur Format. It is a formal (unambiguous) metalanguage for describing language syntax. It is to prevent ambiguity when describing the grammar of a language.
+
+5. What kind of derivation does a top-down parser construct?
+A top-down parser performs a left-most derivation of the sentence.
+
+6. What is another name for a top-down parser?
+It is sometimes called recursive descent parser because it can be written as a set of mutually recursive functions.
+
+7. What does the abstract syntax tree for 3 ∗ (4+5) look like for infix expressions?
+ *
+3 +
+ 4 5
+
+8. What is the prefix equivalent of the infix expression 3 ∗ (4 + 5)? What does the prefix expression’s abstract syntax tree look like?
+* 3 + 4 5.
+
+The abstract syntax tree of the prefix expression would look the same as infix expression's.
+
+9. What is the difference between lex and yacc?
+- lex is a lexical generator tool for the C language. A lexer is used to form tokens from the individual characters of a source file.
+- yacc (yet another compiler compiler) is a compiler for grammars that produced a parser for a language.
+
+10. Why aren’t all context-free grammars good for top-down parsing?
+Because top-down parsing only works with special kind of grammar called LL(1) and all context-free grammars are LL(1).
+
+11. What kind of machine is needed to implement a bottom-up parser?
+A finite state machine.
+
+12. What is a context-sensitive issue in a language? Give an example in Java.
+Context-sensitive issue in a language happens because a grammar can only check if the program is syntactically valid, but cannot check for semantic issues like dividing a number to 0 or type compatibility.
+
+For example, in Java, a line of code like this:
+z = y + x;
+
+It is syntactically valid. But the types of z, y, x might be incompatible but the grammar itself cannot detect this error. It is necessary to use other methods to read the line in a full context to know it is 100% valid or not.
+
+13. What do the terms shift and reduce apply to?
+- Shift: move the token from the input onto the the stack of the pushdown automaton.
+- Reduce: transform the token on the stack using rules of the grammar.

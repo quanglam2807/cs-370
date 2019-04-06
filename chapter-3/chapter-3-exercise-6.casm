@@ -1,0 +1,120 @@
+Class: Rational
+BEGIN
+    Function: gcd/2
+    Constants: None
+    Locals: a, b
+    BEGIN
+              SETUP_LOOP               label02
+    label00:  LOAD_FAST                      1
+              POP_JUMP_IF_FALSE        label01
+              LOAD_FAST                      1
+              LOAD_FAST                      0
+              LOAD_FAST                      1
+              BINARY_MODULO            
+              ROT_TWO                  
+              STORE_FAST                     0
+              STORE_FAST                     1
+              JUMP_ABSOLUTE            label00
+    label01:  POP_BLOCK                
+    label02:  LOAD_FAST                      0
+              RETURN_VALUE             
+    END
+    Function: __mul__/2
+    Constants: None
+    Locals: self, other
+    Globals: Rational, numerator, denominator
+    BEGIN
+              LOAD_GLOBAL                    0
+              LOAD_FAST                      0
+              LOAD_ATTR                      1
+              LOAD_FAST                      1
+              LOAD_ATTR                      1
+              BINARY_MULTIPLY          
+              LOAD_FAST                      0
+              LOAD_ATTR                      2
+              LOAD_FAST                      1
+              LOAD_ATTR                      2
+              BINARY_MULTIPLY          
+              CALL_FUNCTION                  2
+              RETURN_VALUE             
+    END
+    Function: __add__/2
+    Constants: None
+    Locals: self, other
+    Globals: Rational, numerator, denominator
+    BEGIN
+              LOAD_GLOBAL                    0
+              LOAD_FAST                      0
+              LOAD_ATTR                      1
+              LOAD_FAST                      1
+              LOAD_ATTR                      2
+              BINARY_MULTIPLY          
+              LOAD_FAST                      1
+              LOAD_ATTR                      1
+              LOAD_FAST                      0
+              LOAD_ATTR                      2
+              BINARY_MULTIPLY          
+              BINARY_ADD               
+              LOAD_FAST                      0
+              LOAD_ATTR                      2
+              LOAD_FAST                      1
+              LOAD_ATTR                      2
+              BINARY_MULTIPLY          
+              CALL_FUNCTION                  2
+              RETURN_VALUE             
+    END
+    Function: __init__/3
+    Constants: None
+    Locals: self, numerator, denominator, d
+    Globals: Rational, gcd, numerator, denominator
+    BEGIN
+              LOAD_GLOBAL                    0
+              LOAD_ATTR                      1
+              LOAD_FAST                      1
+              LOAD_FAST                      2
+              CALL_FUNCTION                  2
+              STORE_FAST                     3
+              LOAD_FAST                      1
+              LOAD_FAST                      3
+              BINARY_FLOOR_DIVIDE      
+              LOAD_FAST                      0
+              STORE_ATTR                     2
+              LOAD_FAST                      2
+              LOAD_FAST                      3
+              BINARY_FLOOR_DIVIDE      
+              LOAD_FAST                      0
+              STORE_ATTR                     3
+              LOAD_CONST                     0
+              RETURN_VALUE             
+    END
+END
+Function: main/0
+Constants: None, 1, 2, 3
+Locals: x, y
+Globals: Rational, print
+BEGIN
+          LOAD_GLOBAL                    0
+          LOAD_CONST                     1
+          LOAD_CONST                     2
+          CALL_FUNCTION                  2
+          STORE_FAST                     0
+          LOAD_GLOBAL                    0
+          LOAD_CONST                     2
+          LOAD_CONST                     3
+          CALL_FUNCTION                  2
+          STORE_FAST                     1
+          LOAD_GLOBAL                    1
+          LOAD_FAST                      0
+          LOAD_FAST                      1
+          BINARY_ADD               
+          CALL_FUNCTION                  1
+          POP_TOP                  
+          LOAD_GLOBAL                    1
+          LOAD_FAST                      0
+          LOAD_FAST                      1
+          BINARY_MULTIPLY          
+          CALL_FUNCTION                  1
+          POP_TOP                  
+          LOAD_CONST                     0
+          RETURN_VALUE             
+END

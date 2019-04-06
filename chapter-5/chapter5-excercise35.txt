@@ -1,0 +1,14 @@
+token = ["+", "*", "5", "6", "-", "S", "4", "R"]
+
+E(tokens) = add'(E(rest), E(rest1))
+          = add'(prod'(E(rest1), E(rest_)), E(rest_))
+          = add'(prod'(integer'(5), E(rest)), E(rest))
+          = add'(prod'(integer'(5), integer'(6)), E(rest))
+          = add'(prod'(integer'(5), integer'(6)), sub'(E(rest), E(rest)))
+          = add'(prod'(integer'(5), integer'(6)), sub'(store'(E(rest), E(rest))))
+          = add'(prod'(integer'(5), integer'(6)), sub'(store'(integer'(4), recall')))
+
+     +
+  *      - 
+ 5  6  S   R
+      4

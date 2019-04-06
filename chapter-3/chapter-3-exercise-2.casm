@@ -1,0 +1,37 @@
+Function: main/0
+Constants: None, "Enter a number: ", 0, 2
+Locals: n, i, lst
+Globals: input, print, append, int
+BEGIN
+            LOAD_GLOBAL         3
+            LOAD_GLOBAL         0
+            LOAD_CONST          1
+            CALL_FUNCTION       1
+            CALL_FUNCTION       1
+            STORE_FAST          0
+            LOAD_CONST          2
+            STORE_FAST          1
+            BUILD_LIST          0
+            STORE_FAST          2
+            SETUP_LOOP          label02
+label00:    LOAD_FAST           1
+            LOAD_FAST           0
+            COMPARE_OP          0
+            POP_JUMP_IF_FALSE  label01
+            LOAD_FAST           2
+            LOAD_ATTR           2
+            LOAD_FAST           1
+            CALL_FUNCTION       1
+            LOAD_FAST           1
+            LOAD_CONST          3
+            BINARY_ADD          
+            STORE_FAST          1
+            JUMP_ABSOLUTE       label00
+label01:    POP_BLOCK
+label02:    LOAD_GLOBAL         1
+            LOAD_FAST           2
+            CALL_FUNCTION       1
+            LOAD_CONST          0
+            RETURN_VALUE
+END
+

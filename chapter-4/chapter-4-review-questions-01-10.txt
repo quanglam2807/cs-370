@@ -1,0 +1,47 @@
+Quang Lam
+Chapter 4 Review Questions 1-10
+
+1. What does static type checking mean? Does C++ have it? Does Python have it? Does Java have it?
+- Statically type checking means the language performed the checking before execution to see if the operations are defined for the given types of operands. This is opposite of dynamically type checking which means the language defers all type checking until the last possible second when the program is actually executing.
+- Python is not a statically typed language, but a dynamically typed language.
+- C++ and Java are statically typed languages.
+
+2. What are the names and purposes of the two programs that make up the Java environment for executing programs?
+- Java consists of two important tools: 
+    - a Java Virtual Machine (i.e. JVM)
+    - a Java compiler that compiles from Java source code to Java bytecode (which is what the JVM executes).
+
+3. What is the number one problem that C/C++ programs must deal with? Why is this not a problem for Java and Python programs?
+- The most persistent problem with C/C++ pro- grams are memory leaks.
+- It is not a problem for Java and Python programs because both of these languages have a garbage collector to take care of freeing memory that is no longer needed by a program. C/C++ are designed to give the programmer maximum control and don't have it.
+
+4. What does the make tool do and how does it work for C++ programs?
+- Make is a program that can be used to compile programs that are composed of modules and utilize separate compilation. C and C++ programs utilize separate compilation and typically you write a make file to compile programs written in these languages, or you use a tool to automatically create a make file.
+
+5. Is there an equivalent to the make tool for Java programs?
+- There isn't because the make tool is built into the Java compiler.
+
+6. How does the C++ compiler distinguish between macro processor directives and
+C/C++ statements?
+- Macro processor directives are preceded by a hash sign while C/C++ statements are not.
+
+7. What is a namespace in C++? What is comparable to a namespace in Java? In Python?
+- A namespace a narrower scope which allow us to group named entities that otherwise would have global scope into self-contained environment. This helps preventing many potential name conflicts between header files and modules that would create compile errors which prevent programs from compiling.
+- In Java, a package is the equivalent of a namespace.
+- In Pytohn, a module is the equivalent of a namespace..
+
+8. What is the default executable name for a compiled C++ program?
+- By default g++ produces a program called a.out.
+
+9. What is separate compilation and why is it important?
+- Separate compilation in C++ programs means that each module in the program is compiled separately.
+- This is important because large C++ projects often contain hundreds of C++ source files. Separate compilation means that only the small piece a programmer changes needs to be recompiled if the interface (i.e. the header file) to other modules does not change. After compiling the source files to object files, the object files can be linked together to form an executable program. Linking is a very fast operation compared to compiling.
+
+10. What is dynamic linking? Does it happen in C++ or in Java? Why is it important?
+- Dynamic linking means libraries are generally linked at run-time, instead of being compiled into the executables.
+- In details, software, often part of the operating system, detects when a library is going to be used by a program and loads it into memory and links it to the program that requests its services as the program is executing.
+- Both C++ and Java have dynamic linking.
+- It is important becaus it helps:
+    - decreasing the size of statically linked executable programs.
+    - allowing seperate libraries to be easily updated without requiring the whole executable programs to be re-linked and recompiled.
+    - allowing libraries to be shared between executable programs, saving space and time to manage different copies of the same libraries.
