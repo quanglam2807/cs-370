@@ -1,0 +1,6 @@
+letdec(
+   bindval(idpat('x'),int('5')),
+   [
+apply(id('println'),negate(id('x')))
+   ])
+.

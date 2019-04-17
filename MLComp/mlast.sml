@@ -18,6 +18,7 @@ datatype
         | ifthen of exp * exp * exp
         | whiledo of exp * exp
         | func of int * match list
+        | negate of exp
   and
     match = match of pat * exp
   and

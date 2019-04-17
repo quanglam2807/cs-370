@@ -113,10 +113,10 @@ open MLAS;
        | nameOf(letdec(L1,L2)) = "letdec"
        | nameOf(handlexp(e,L)) = "handlexp"
        | nameOf(raisexp(e)) = "raisexp"
+       | nameOf(negate(e)) = "negate"
        | nameOf(ifthen(e1,e2,e3)) = "ifthen"
        | nameOf(whiledo(e1,e2)) = "whiledo"
        | nameOf(func(idnum,L)) = "func"^Int.toString(idnum);
-
      fun writeTerm(outFile,ast) = 
          let fun print(s) = TextIO.output(outFile,s)
 
@@ -173,6 +173,11 @@ open MLAS;
                | writeExp(indent,raisexp(exp)) = 
                      (print("apply(id('raise'),"); 
                       writeExp(indent,exp); 
+                      print(")"))
+
+                | writeExp(indent,negate(exp)) = 
+                     (print("negate("); 
+                      writeExp(indent^"   ",exp); 
                       print(")"))
 
                | writeExp(indent,handlexp(exp,L)) = 
@@ -306,6 +311,7 @@ open MLAS;
                | con(letdec(d,L2)) = (decconsts d) @ (List.foldr (fn (x,y) => (con x) @ y) [] L2)   
                | con(apply(t1,t2)) = (con t1) @ (con t2)
                | con(raisexp(t)) = (con t)
+               | con(negate(t)) = (con t)
                | con(listcon(L)) = (List.foldr (fn (x,y) => (con x)@y) [] L)
                | con(func(idnum,matchlist)) = ["code(anon@"^Int.toString(idnum)^")"]  
                | con(handlexp(t1,L)) = (con t1) @ ((List.foldr (fn (match(pat,exp),y) => (patConsts pat) @ (con exp) @ y) []) L)                   
@@ -388,6 +394,7 @@ open MLAS;
                   ())
               
                | bindingsOf(raisexp(exp),bindings,scope) = bindingsOf(exp,bindings,scope)
+               | bindingsOf(negate(exp),bindings,scope) = bindingsOf(exp,bindings,scope)
                | bindingsOf(expsequence(L),bindings,scope) = (List.map (fn x => (bindingsOf(x,bindings,scope))) L; ())
                | bindingsOf(letdec(d,L2),bindings,scope) = 
                  let val newbindings = decbindingsOf(d,bindings,scope)
@@ -710,6 +717,14 @@ open MLAS;
            TextIO.output(outFile,indent^"RAISE_VARARGS 1\n")
          end
 
+       | codegen(negate(e),outFile,indent,consts,locals,freeVars,cellVars,globals,env,globalBindings,scope) = 
+         let val index = lookupIndex("0",consts)
+         in
+           TextIO.output(outFile,indent^"LOAD_CONST "^index^"\n");
+           codegen(e,outFile,indent,consts,locals,freeVars,cellVars,globals,env,globalBindings,scope);
+           TextIO.output(outFile, indent^"BINARY_SUBTRACT\n")
+         end
+
        | codegen(handlexp(t1,L),outFile,indent,consts,locals,freeVars,cellVars,globals,env,globalBindings,scope) = 
          let val L0 = nextLabel()
              val L1 = nextLabel()
@@ -1012,6 +1027,7 @@ open MLAS;
                | functions(infixexp(operator,exp1,exp2)) = (functions exp1;functions exp2)
                | functions(handlexp(exp,L)) = (functions exp; List.map (fn (match(pat,exp)) => functions exp) L; ())
                | functions(raisexp(e)) = (functions e)
+               | functions(negate(e)) = (functions e)
 
                | functions(expsequence(L)) = (List.map (fn x => (functions x)) L; ())
                | functions(letdec(d,L2)) = 
@@ -1110,6 +1126,7 @@ open MLAS;
                | functions(infixexp(operator,exp1,exp2)) = (functions exp1;functions exp2)
                | functions(handlexp(exp,L)) = (functions exp;List.map (fn (match(pat,exp)) => functions exp) L; ())
                | functions(raisexp(e)) = (functions e)
+               | functions(negate(e)) = (functions e)
 
 
                | functions(expsequence(L)) = (List.map (fn x => (functions x)) L; ())

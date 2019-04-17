@@ -109,6 +109,7 @@ fun makeMatchList (nil) = raise emptyDecList
     | Id of string
     | SetEqual
     | Exclaim
+    | Tilde
 
 
 
@@ -133,7 +134,7 @@ fun makeMatchList (nil) = raise emptyDecList
 %left Plus Minus Append Equals NotEqual
 %left Times Div Mod Greater Less GreaterEqual LessEqual 
 %right ListCons
-%right Exclaim
+%right Exclaim Tilde
 
 %%
 
@@ -153,6 +154,7 @@ Exp : Con                                                  (Con)
     | Id                                                   (id(Id))
     | FuncExp Exp                                          (apply(FuncExp,Exp))
     | Exclaim Exp                                          (apply(id("!"),Exp))
+    | Tilde Exp                                            (negate(Exp))
     | Id SetEqual FuncExp                                  (infixexp(":=",id(Id),FuncExp))
     | Exp Plus FuncExp                                     (infixexp("+",Exp,FuncExp))
     | Exp Minus FuncExp                                    (infixexp("-",Exp,FuncExp))
