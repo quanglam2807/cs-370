@@ -711,6 +711,30 @@ open MLAS;
            TextIO.output(outFile,indent^"COMPARE_OP "^index^"\n")
          end
 
+       | codegen(infixexp(">=",t1,t2),outFile,indent,consts,locals,freeVars,cellVars,globals,env,globalBindings,scope) = 
+         let val _ = codegen(t1,outFile,indent,consts,locals,freeVars,cellVars,globals,env,globalBindings,scope)
+             val _ = codegen(t2,outFile,indent,consts,locals,freeVars,cellVars,globals,env,globalBindings,scope)   
+             val index = lookupIndex(">=",cmp_op)           
+         in
+           TextIO.output(outFile,indent^"COMPARE_OP "^index^"\n")
+         end
+
+       | codegen(infixexp("<=",t1,t2),outFile,indent,consts,locals,freeVars,cellVars,globals,env,globalBindings,scope) = 
+         let val _ = codegen(t1,outFile,indent,consts,locals,freeVars,cellVars,globals,env,globalBindings,scope)
+             val _ = codegen(t2,outFile,indent,consts,locals,freeVars,cellVars,globals,env,globalBindings,scope)   
+             val index = lookupIndex("<=",cmp_op)           
+         in
+           TextIO.output(outFile,indent^"COMPARE_OP "^index^"\n")
+         end
+
+       | codegen(infixexp("<>",t1,t2),outFile,indent,consts,locals,freeVars,cellVars,globals,env,globalBindings,scope) = 
+         let val _ = codegen(t1,outFile,indent,consts,locals,freeVars,cellVars,globals,env,globalBindings,scope)
+             val _ = codegen(t2,outFile,indent,consts,locals,freeVars,cellVars,globals,env,globalBindings,scope)   
+             val index = lookupIndex("<>",cmp_op)           
+         in
+           TextIO.output(outFile,indent^"COMPARE_OP "^index^"\n")
+         end
+
        | codegen(raisexp(t),outFile,indent,consts,locals,freeVars,cellVars,globals,env,globalBindings,scope) = 
          let val _ = codegen(t,outFile,indent,consts,locals,freeVars,cellVars,globals,env,globalBindings,scope)      
          in
