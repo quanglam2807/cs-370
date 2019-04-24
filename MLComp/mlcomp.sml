@@ -312,6 +312,7 @@ open MLAS;
                | con(apply(t1,t2)) = (con t1) @ (con t2)
                | con(raisexp(t)) = (con t)
                | con(negate(t)) = (con t)
+               | con(ifthen(t1,t2,t3)) = (con t1) @ (con t2) @ (con t3)
                | con(listcon(L)) = (List.foldr (fn (x,y) => (con x)@y) [] L)
                | con(func(idnum,matchlist)) = ["code(anon@"^Int.toString(idnum)^")"]  
                | con(handlexp(t1,L)) = (con t1) @ ((List.foldr (fn (match(pat,exp),y) => (patConsts pat) @ (con exp) @ y) []) L)                   
@@ -395,6 +396,7 @@ open MLAS;
               
                | bindingsOf(raisexp(exp),bindings,scope) = bindingsOf(exp,bindings,scope)
                | bindingsOf(negate(exp),bindings,scope) = bindingsOf(exp,bindings,scope)
+               | bindingsOf(ifthen(exp1,exp2,exp3), bindings, scope) = (bindingsOf(exp1, bindings, scope); bindingsOf(exp2, bindings, scope); bindingsOf(exp3,bindings,scope))
                | bindingsOf(expsequence(L),bindings,scope) = (List.map (fn x => (bindingsOf(x,bindings,scope))) L; ())
                | bindingsOf(letdec(d,L2),bindings,scope) = 
                  let val newbindings = decbindingsOf(d,bindings,scope)
@@ -749,6 +751,19 @@ open MLAS;
            TextIO.output(outFile, indent^"BINARY_SUBTRACT\n")
          end
 
+       | codegen(ifthen(e1,e2,e3),outFile,indent,consts,locals,freeVars,cellVars,globals,env,globalBindings,scope) = 
+         let val then_label=nextLabel()
+             val else_label=nextLabel()
+         in
+           codegen(e1,outFile,indent,consts,locals,freeVars,cellVars,globals,env,globalBindings,scope);
+           TextIO.output(outFile,indent^"POP_JUMP_IF_FALSE "^else_label^"\n");
+           codegen(e2,outFile,indent,consts,locals,freeVars,cellVars,globals,env,globalBindings,scope);
+           TextIO.output(outFile,indent^"JUMP_FORWARD "^then_label^"\n");
+           TextIO.output(outFile,else_label^": \n");
+           codegen(e3,outFile,indent,consts,locals,freeVars,cellVars,globals,env,globalBindings,scope);
+           TextIO.output(outFile,then_label^": \n")
+         end     
+
        | codegen(handlexp(t1,L),outFile,indent,consts,locals,freeVars,cellVars,globals,env,globalBindings,scope) = 
          let val L0 = nextLabel()
              val L1 = nextLabel()
@@ -1052,6 +1067,7 @@ open MLAS;
                | functions(handlexp(exp,L)) = (functions exp; List.map (fn (match(pat,exp)) => functions exp) L; ())
                | functions(raisexp(e)) = (functions e)
                | functions(negate(e)) = (functions e)
+               | functions(ifthen(e1,e2,e3)) = (functions e1;functions e2;functions e3)
 
                | functions(expsequence(L)) = (List.map (fn x => (functions x)) L; ())
                | functions(letdec(d,L2)) = 
@@ -1151,7 +1167,7 @@ open MLAS;
                | functions(handlexp(exp,L)) = (functions exp;List.map (fn (match(pat,exp)) => functions exp) L; ())
                | functions(raisexp(e)) = (functions e)
                | functions(negate(e)) = (functions e)
-
+               | functions(ifthen(e1,e2,e3)) = (functions e1;functions e2;functions e3)
 
                | functions(expsequence(L)) = (List.map (fn x => (functions x)) L; ())
 

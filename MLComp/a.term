@@ -1,1 +1,18 @@
-apply(id('println'),apply(id('<>'),tuplecon([int('1'),int('2')]))).
+letdec(
+   bindval(idpat('x'),apply(id('Int.fromString'),apply(id('input'),str('"Please enter an integer: "')))),
+   [
+    letdec(
+       bindval(idpat('y'),apply(id('Int.fromString'),apply(id('input'),str('"Please enter an integer: "')))),
+       [
+apply(id('print'),str('"The maximum is "'))        ,apply(id('println'),        ifthen(
+apply(id('>'),tuplecon([id('x')           ,id('y')]))
+        ,
+id('x')
+        ,
+id('y')
+        )
+)
+       ])
+
+   ])
+.
