@@ -98,6 +98,8 @@ fun makeMatchList (nil) = raise emptyDecList
     | While
     | Do
     | Handle
+    | Case
+    | Of
     | Raise
     | And
     | Rec
@@ -179,9 +181,9 @@ Exp : Con                                                  (Con)
                 (List.hd (List.foldr (fn (x,y) => [letdec(x,y)]) ExpSequence DecSeq))
     | Raise FuncExp                                        (raisexp(FuncExp))
     | Exp Handle MatchExp                                  (handlexp(Exp,MatchExp))
+    | Case Exp Of MatchExp                                 (caseof(Exp,MatchExp))
     | If Exp Then Exp Else FuncExp                         (ifthen(Exp1,Exp2,FuncExp))
     | While Exp Do FuncExp                                 (whiledo(Exp,FuncExp))
-
     | Fn MatchExp                                          (func(nextIdNum(),MatchExp))
 
 (* The FuncExp is defined because it forces a reduction in the parser to be performed

@@ -17,3 +17,15 @@ f:int -> int -> int
 
 (* tuplepat -> listpat (for exercise 7 & 8) *)
 
+(* Exercise 6 *)
+let val x = 4
+in
+  println
+    case x of
+      1 => "hello"
+    | 2 => "how"
+    | 3 => "are"
+    | 4 => "you"
+end
+(* Become this *)
+(* caseof(id("x"), [ match(intpat("1"), str("hello")), ... ]) *)

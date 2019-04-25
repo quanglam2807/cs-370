@@ -1,18 +1,10 @@
 letdec(
-   bindval(idpat('x'),apply(id('Int.fromString'),apply(id('input'),str('"Please enter an integer: "')))),
+   bindval(idpat('x'),int('4')),
    [
-    letdec(
-       bindval(idpat('y'),apply(id('Int.fromString'),apply(id('input'),str('"Please enter an integer: "')))),
-       [
-apply(id('print'),str('"The maximum is "'))        ,apply(id('println'),        ifthen(
-apply(id('>'),tuplecon([id('x')           ,id('y')]))
-        ,
+apply(id('println'),    caseof(
 id('x')
-        ,
-id('y')
-        )
+    , [
+       match(intpat(1)       ,str('"hello"')       )       ,       match(intpat(2)       ,str('"how"')       )       ,       match(intpat(3)       ,str('"are"')       )       ,       match(intpat(4)       ,str('"you"')       )    ])
 )
-       ])
-
    ])
 .

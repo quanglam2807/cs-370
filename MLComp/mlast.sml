@@ -15,6 +15,7 @@ datatype
         | letdec of dec * (exp list)
         | raisexp of exp
         | handlexp of exp * match list
+        | caseof of exp * match list
         | ifthen of exp * exp * exp
         | whiledo of exp * exp
         | func of int * match list

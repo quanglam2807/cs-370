@@ -1,34 +1,45 @@
 Function: main/0
-Constants: None, 'Match Not Found', 0, "Please enter an integer: ", "The maximum is "
-Locals: y@1, x@0
+Constants: None, 'Match Not Found', 0, 1, "hello", 2, "how", 3, "are", 4, "you"
+Locals: x@0
 Globals: print, fprint, input, int, len, type, Exception, funlist, concat
 BEGIN
-    LOAD_GLOBAL 3
-    LOAD_GLOBAL 2
-    LOAD_CONST 3
-    CALL_FUNCTION 1
-    CALL_FUNCTION 1
-    STORE_FAST 1
-    LOAD_GLOBAL 3
-    LOAD_GLOBAL 2
-    LOAD_CONST 3
-    CALL_FUNCTION 1
-    CALL_FUNCTION 1
+    LOAD_CONST 9
     STORE_FAST 0
-    LOAD_GLOBAL 1
-    LOAD_CONST 4
-    CALL_FUNCTION 1
-    POP_TOP
     LOAD_GLOBAL 0
-    LOAD_FAST 1
     LOAD_FAST 0
-    COMPARE_OP 4
+    DUP_TOP
+    LOAD_CONST 3
+    COMPARE_OP 2
     POP_JUMP_IF_FALSE L1
-    LOAD_FAST 1
+    POP_TOP
+    LOAD_CONST 4
     JUMP_FORWARD L0
-L1: 
-    LOAD_FAST 0
-L0: 
+L1:
+    DUP_TOP
+    LOAD_CONST 5
+    COMPARE_OP 2
+    POP_JUMP_IF_FALSE L2
+    POP_TOP
+    LOAD_CONST 6
+    JUMP_FORWARD L0
+L2:
+    DUP_TOP
+    LOAD_CONST 7
+    COMPARE_OP 2
+    POP_JUMP_IF_FALSE L3
+    POP_TOP
+    LOAD_CONST 8
+    JUMP_FORWARD L0
+L3:
+    DUP_TOP
+    LOAD_CONST 9
+    COMPARE_OP 2
+    POP_JUMP_IF_FALSE L4
+    POP_TOP
+    LOAD_CONST 10
+    JUMP_FORWARD L0
+L4:
+L0:
     CALL_FUNCTION 1
     POP_TOP
     LOAD_CONST 0

@@ -112,6 +112,7 @@ open MLAS;
        | nameOf(expsequence(L)) = "expsequence"
        | nameOf(letdec(L1,L2)) = "letdec"
        | nameOf(handlexp(e,L)) = "handlexp"
+       | nameOf(caseof(e,L)) = "caseof"
        | nameOf(raisexp(e)) = "raisexp"
        | nameOf(negate(e)) = "negate"
        | nameOf(ifthen(e1,e2,e3)) = "ifthen"
@@ -187,6 +188,12 @@ open MLAS;
                       printList(writeMatch,indent^"   ",L); 
                       println(indent^"])"))
 
+               | writeExp(indent,caseof(exp,L)) = 
+                     (println(indent^"caseof("); 
+                      writeExp(indent^"   ",exp); 
+                      println("\n"^indent^", ["); 
+                      printList(writeMatch,indent^"   ",L); 
+                      println(indent^"])"))
 
                | writeExp(indent,ifthen(exp1,exp2,exp3)) = 
                      (println(indent^"ifthen("); 
@@ -316,6 +323,7 @@ open MLAS;
                | con(listcon(L)) = (List.foldr (fn (x,y) => (con x)@y) [] L)
                | con(func(idnum,matchlist)) = ["code(anon@"^Int.toString(idnum)^")"]  
                | con(handlexp(t1,L)) = (con t1) @ ((List.foldr (fn (match(pat,exp),y) => (patConsts pat) @ (con exp) @ y) []) L)                   
+               | con(caseof(t1,L)) = (con t1) @ ((List.foldr (fn (match(pat,exp),y) => (patConsts pat) @ (con exp) @ y) []) L)                                                     
                | con(tuplecon(L)) = List.foldr (fn (x,y) => (con x) @ y) [] L
 
                | con(str(s)) = [s]
@@ -393,7 +401,15 @@ open MLAS;
                        List.map (fn b => addIt(b,theBindings)) patBs
                      end) L;
                   ())
-              
+               | bindingsOf(caseof(exp,L),bindings,scope) =  
+                 (bindingsOf(exp,bindings,scope); 
+                  List.map (fn match(pat,exp) => 
+                     let val patBs = patBindings(pat,scope+1)
+                     in
+                       bindingsOf(exp,patBs@bindings,scope+1);
+                       List.map (fn b => addIt(b,theBindings)) patBs
+                     end) L;
+                  ())              
                | bindingsOf(raisexp(exp),bindings,scope) = bindingsOf(exp,bindings,scope)
                | bindingsOf(negate(exp),bindings,scope) = bindingsOf(exp,bindings,scope)
                | bindingsOf(ifthen(exp1,exp2,exp3), bindings, scope) = (bindingsOf(exp1, bindings, scope); bindingsOf(exp2, bindings, scope); bindingsOf(exp3,bindings,scope))
@@ -806,6 +822,27 @@ open MLAS;
            TextIO.output(outFile,L2^":\n")
          end
 
+       | codegen(caseof(t1,L),outFile,indent,consts,locals,freeVars,cellVars,globals,env,globalBindings,scope) = 
+         let val L0 = nextLabel()
+             val excmpIdx = lookupIndex("excmatch",cmp_op)
+         in
+           codegen(t1,outFile,indent,consts,locals,freeVars,cellVars,globals,env,globalBindings,scope);         
+           List.map (fn (match(pat,exp)) => 
+            let val endpatternlab = nextLabel()
+            in
+              TextIO.output(outFile, indent^"DUP_TOP\n");
+              let val newbindings = patmatch(pat,outFile,indent,consts,locals,freeVars,cellVars,globals,env,scope+1,endpatternlab)
+              in
+                TextIO.output(outFile, indent^"POP_TOP\n");
+                codegen(exp,outFile,indent,consts,locals,freeVars,cellVars,globals,newbindings@env,globalBindings,scope+1);
+                TextIO.output(outFile,indent^"JUMP_FORWARD "^L0^"\n");
+                TextIO.output(outFile,endpatternlab^":\n")
+              end
+            end
+           ) L;
+           TextIO.output(outFile,L0^":\n")
+         end
+
        | codegen(letdec(d,L2),outFile,indent,consts,locals,freeVars,cellVars,globals,env,globalBindings,scope) = 
          let val newbindings = decgen(d,outFile,indent,consts,locals,freeVars,cellVars,globals,env,globalBindings,scope)
          in
@@ -1065,6 +1102,7 @@ open MLAS;
                | functions(apply(exp1,exp2)) = (functions exp1;functions exp2)
                | functions(infixexp(operator,exp1,exp2)) = (functions exp1;functions exp2)
                | functions(handlexp(exp,L)) = (functions exp; List.map (fn (match(pat,exp)) => functions exp) L; ())
+               | functions(caseof(exp,L)) = (functions exp; List.map (fn (match(pat,exp)) => functions exp) L; ())
                | functions(raisexp(e)) = (functions e)
                | functions(negate(e)) = (functions e)
                | functions(ifthen(e1,e2,e3)) = (functions e1;functions e2;functions e3)
@@ -1165,6 +1203,7 @@ open MLAS;
                | functions(apply(exp1,exp2)) = (functions exp1;functions exp2)
                | functions(infixexp(operator,exp1,exp2)) = (functions exp1;functions exp2)
                | functions(handlexp(exp,L)) = (functions exp;List.map (fn (match(pat,exp)) => functions exp) L; ())
+               | functions(caseof(exp,L)) = (functions exp;List.map (fn (match(pat,exp)) => functions exp) L; ())
                | functions(raisexp(e)) = (functions e)
                | functions(negate(e)) = (functions e)
                | functions(ifthen(e1,e2,e3)) = (functions e1;functions e2;functions e3)
