@@ -1,45 +1,27 @@
 Function: main/0
-Constants: None, 'Match Not Found', 0, 1, "hello", 2, "how", 3, "are", 4, "you"
-Locals: x@0
+Constants: None, 'Match Not Found', 0, "hello", 1, True
+Locals: z@0, y@0, x@0
 Globals: print, fprint, input, int, len, type, Exception, funlist, concat
 BEGIN
-    LOAD_CONST 9
-    STORE_FAST 0
-    LOAD_GLOBAL 0
-    LOAD_FAST 0
-    DUP_TOP
     LOAD_CONST 3
-    COMPARE_OP 2
-    POP_JUMP_IF_FALSE L1
-    POP_TOP
     LOAD_CONST 4
-    JUMP_FORWARD L0
-L1:
-    DUP_TOP
     LOAD_CONST 5
-    COMPARE_OP 2
-    POP_JUMP_IF_FALSE L2
-    POP_TOP
-    LOAD_CONST 6
-    JUMP_FORWARD L0
-L2:
-    DUP_TOP
-    LOAD_CONST 7
-    COMPARE_OP 2
-    POP_JUMP_IF_FALSE L3
-    POP_TOP
-    LOAD_CONST 8
-    JUMP_FORWARD L0
-L3:
-    DUP_TOP
-    LOAD_CONST 9
-    COMPARE_OP 2
-    POP_JUMP_IF_FALSE L4
-    POP_TOP
-    LOAD_CONST 10
-    JUMP_FORWARD L0
-L4:
+    BUILD_TUPLE 3
+    BUILD_FUNLIST 1
+    SELECT_FUNLIST 
+    SELECT_TUPLE 3
+    STORE_FAST 2
+    STORE_FAST 1
+    STORE_FAST 0
+    JUMP_FORWARD L1
 L0:
+    LOAD_GLOBAL 6
+    LOAD_CONST 1
+    CALL_FUNCTION 1
+    RAISE_VARARGS 1
+L1:
+    LOAD_GLOBAL 0
+    LOAD_FAST 2
     CALL_FUNCTION 1
     POP_TOP
     LOAD_CONST 0

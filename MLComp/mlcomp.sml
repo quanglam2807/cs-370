@@ -361,6 +361,7 @@ open MLAS;
        | patBindings(idpat(name),scope) = [(name,name^"@"^Int.toString(scope))]
        | patBindings(infixpat("::",pat1,pat2),scope) = (patBindings(pat1,scope)) @ (patBindings(pat2,scope))
        | patBindings(tuplepat(L),scope) = List.foldr (fn (x,y) => patBindings(x,scope)@y) [] L
+       | patBindings(listpat(L),scope) = List.foldr (fn (x,y) => patBindings(x,scope)@y) [] L
        | patBindings(_,scope) = 
          (TextIO.output(TextIO.stdOut, "\nAttempt to gather locals for unsupported pattern!\n");
           raise Unimplemented) 
@@ -1026,6 +1027,10 @@ open MLAS;
 
        | patmatch(tuplepat(L),outFile,indent,consts,locals,freeVars,cellVars,globals,env,scope,label) =
          (TextIO.output(outFile,indent^"SELECT_TUPLE "^Int.toString(length(L))^"\n");
+          List.foldl (fn (x,y) => patmatch(x,outFile,indent,consts,locals,freeVars,cellVars,globals,env,scope,label) @ y) [] L)
+
+       | patmatch(listpat(L),outFile,indent,consts,locals,freeVars,cellVars,globals,env,scope,label) =
+         (TextIO.output(outFile,indent^"SELECT_FUNLIST \n");
           List.foldl (fn (x,y) => patmatch(x,outFile,indent,consts,locals,freeVars,cellVars,globals,env,scope,label) @ y) [] L)
 
        | patmatch(_,outFile,indent,consts,locals,freeVars,cellVars,globals,env,scope,label) =

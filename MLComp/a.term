@@ -1,10 +1,6 @@
 letdec(
-   bindval(idpat('x'),int('4')),
+   bindval(listpat([tuplepat([idpat('x')   ,idpat('y')   ,idpat('z')])]),listcon([tuplecon([str('"hello"')   ,int('1')   ,bool('true')])])),
    [
-apply(id('println'),    caseof(
-id('x')
-    , [
-       match(intpat(1)       ,str('"hello"')       )       ,       match(intpat(2)       ,str('"how"')       )       ,       match(intpat(3)       ,str('"are"')       )       ,       match(intpat(4)       ,str('"you"')       )    ])
-)
+apply(id('println'),id('x'))
    ])
 .
