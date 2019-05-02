@@ -358,6 +358,7 @@ open MLAS;
        | patBindings(intpat(v),scope) = []
        | patBindings(boolpat(v),scope) = []
        | patBindings(strpat(v),scope) = []
+       | patBindings(wildcardpat, scope) = []
        | patBindings(idpat(name),scope) = [(name,name^"@"^Int.toString(scope))]
        | patBindings(infixpat("::",pat1,pat2),scope) = (patBindings(pat1,scope)) @ (patBindings(pat2,scope))
        | patBindings(tuplepat(L),scope) = List.foldr (fn (x,y) => patBindings(x,scope)@y) [] L
@@ -1032,6 +1033,10 @@ open MLAS;
        | patmatch(listpat(L),outFile,indent,consts,locals,freeVars,cellVars,globals,env,scope,label) =
          (TextIO.output(outFile,indent^"SELECT_FUNLIST \n");
           List.foldl (fn (x,y) => patmatch(x,outFile,indent,consts,locals,freeVars,cellVars,globals,env,scope,label) @ y) [] L)
+
+       | patmatch(wildcardpat,outFile,indent,consts,locals,freeVars,cellVars,globals,env,scope,label) = 
+          (TextIO.output(outFile,indent^"POP_TOP \n");
+          [])
 
        | patmatch(_,outFile,indent,consts,locals,freeVars,cellVars,globals,env,scope,label) =
          (TextIO.output(TextIO.stdOut, "\nAttempt to compile unsupported pattern match!\n");

@@ -1,6 +1,6 @@
 letdec(
-   bindval(listpat([tuplepat([idpat('x')   ,idpat('y')   ,idpat('z')])]),listcon([tuplecon([str('"hello"')   ,int('1')   ,bool('true')])])),
+   bindval(tuplepat([idpat('a')   ,wildcardpat   ,idpat('c')   ,wildcardpat]),tuplecon([int('1')   ,int('2')   ,int('3')   ,int('4')])),
    [
-apply(id('println'),id('x'))
+apply(id('println'),id('a'))    ,apply(id('println'),id('c'))
    ])
 .
