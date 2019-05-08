@@ -562,6 +562,12 @@ find(Env,Name,Type) :-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % The typecheckMatch predicate goes here.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+typecheckMatch(Env,Id,match(Pat,Exp)) :- 
+  find(Env,Id,fn(Alpha,Beta)), 
+  typecheckPat(Pat,Alpha,EPat), 
+  append(EPat,Env,NewEnv), 
+  typecheckExp(NewEnv,Exp,Beta).
+
 typecheckMatches(_,_,[]) :- !.
 
 typecheckMatches(Env,Name,[Match|Tail]) :- 
@@ -668,6 +674,11 @@ typecheckTuplePats([],[],[]).
 typecheckTuplePats([H|T],[HT|TTypes],REnv) :- 
         typecheckPat(H,HT,HEnv), typecheckTuplePats(T,TTypes,TEnv), append(HEnv,TEnv,REnv).
 
+typecheckListPats([],_,[]).
+
+typecheckListPats([H|T],Type,REnv) :- 
+  typecheckPat(H,Type,HEnv), typecheckListPats(T,Type,TEnv), append(HEnv,TEnv,REnv).
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % type check lists with the typecheckListPats predicate here.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -676,9 +687,15 @@ typecheckPat(idpat(nil),listOf(_),[]) :- !.
 
 typecheckPat(idpat(Name),A,[(Name,A)]) :- !.
 
+typecheckPat(infixpat(::, H, T), listOf(A), Env) :- typecheckPat(H, A, HEnv), typecheckPat(T, listOf(A), TEnv), append(HEnv,TEnv, Env).
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Other patterns go here.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+typecheckPat(tuplepat(L),tuple(A),REnv) :- typecheckTuplePats(L,A,REnv), !.
+
+typecheckPat(listpat(L),listOf(A),REnv) :- typecheckListPats(L,A,REnv), !.
+
 
 typecheckPat(A,_,_) :- 
         nl, nl, print('Typechecker Error: Unknown pattern '), print(A), 
@@ -722,6 +739,7 @@ typecheckDec(Env,bindval(Pat,E),NewEnv) :- typecheckPat(Pat,ExpType,NewEnv), typ
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % The Bind Val Rec type check goes here
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+typecheckDec(Env,bindvalrec(id(Id), E),[(Id,CA)]) :- typecheckExp([(Id,A)|Env],E, A), closeExp(idpat(Id),CA), !.
 
 typecheckDec(Env,funmatches(L),NewEnv) :- 
     gatherFuns(L,FunsEnv), append(FunsEnv,Env,NewEnv), typecheckFuns(NewEnv,L), closeFunTypes(FunsEnv), !.
@@ -758,6 +776,8 @@ typecheckTuple(Env,[Exp|T],[ExpT|TailType]) :- typecheckExp(Env,Exp,ExpT), typec
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Typechecking sequences goes here with the typecheckSequence predicate that you write here.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+typecheckSequence(Env,[EN],T) :- typecheckExp(Env,EN,T).
+typecheckSequence(Env,[EI|RestSeq],T) :- typecheckExp(Env,EI,_), typecheckSequence(Env, RestSeq,T).
 
 typecheckList(_,[],_) :- !.
 
@@ -766,6 +786,7 @@ typecheckList(Env,[H|T],A) :- typecheckExp(Env,H,A), typecheckList(Env,T,A), !.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % The Anonymous Function typecheck goes here. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+typecheckExp(Env, func(Name, Matches), fn(A, B)) :- typecheckMatches([(Name, fn(A,B))|Env], Name, Matches).
 
 typecheckExp(Env,handlexp(Exp1,Matches), T) :- 
         typecheckExp(Env,Exp1,T), typecheckMatches([('handle@',fn(exn,T))|Env],'handle@',Matches), !.
