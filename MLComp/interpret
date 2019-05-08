@@ -1,0 +1,6 @@
+#!/bin/bash
+./mlcomp $*
+swipl << EOF
+consult('interpret.pl').
+interpret.
+EOF

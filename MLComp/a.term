@@ -1,6 +1,11 @@
 letdec(
-   bindval(tuplepat([idpat('a')   ,wildcardpat   ,idpat('c')   ,wildcardpat]),tuplecon([int('1')   ,int('2')   ,int('3')   ,int('4')])),
+   bindval(idpat('x'),int('5')),
    [
-apply(id('println'),id('a'))    ,apply(id('println'),id('c'))
+    letdec(
+       bindval(idpat('y'),int('6')),
+       [
+apply(id('println'),apply(id('+'),tuplecon([id('x')        ,id('y')])))
+       ])
+
    ])
 .
