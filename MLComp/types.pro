@@ -383,6 +383,8 @@ printPat(strpat(S)) :- print(S), !.
 
 printPat(wildcardpat):- print('_'), !.
 
+printPat(aspat(Name,Pat)) :- print(Name), print(' as '), printPat(Pat), !.
+
 printPat(A) :- 
         nl, nl, print('Typechecker Error: Unknown pattern '), print(A),
         nl, nl, throw(error('printPat: unknown pattern')).
@@ -692,6 +694,8 @@ typecheckPat(idpat(Name),A,[(Name,A)]) :- !.
 typecheckPat(wildcardpat,_,_):-!.
 
 typecheckPat(wildcardpat,A,[A]) :- !.
+
+typecheckPat(aspat(Name,Pat),A,[(Name,A)|T]) :- typecheckPat(Pat,A,T).
 
 typecheckPat(infixpat(::,H,T),listOf(A),Env) :- typecheckPat(H,A,HEnv), typecheckPat(T,listOf(A),TEnv), append(HEnv,TEnv,Env).
 

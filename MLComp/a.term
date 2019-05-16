@@ -1,6 +1,6 @@
 letdec(
-   bindval(wildcardpat,apply(id('print'),str('"hi"'))),
+   bindval(aspat('L',infixpat('::',idpat('h'),idpat('t'))),listcon([int('1')   ,int('2')   ,int('3')   ,int('4')])),
    [
-int('5')
+apply(id('print'),id('L'))    ,apply(id('print'),id('h'))    ,apply(id('print'),id('t'))
    ])
 .
