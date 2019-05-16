@@ -381,6 +381,8 @@ printPat(boolpat(B)) :- print(B), !.
 
 printPat(strpat(S)) :- print(S), !.
 
+printPat(wildcardpat):- print('_'), !.
+
 printPat(A) :- 
         nl, nl, print('Typechecker Error: Unknown pattern '), print(A),
         nl, nl, throw(error('printPat: unknown pattern')).
@@ -687,7 +689,11 @@ typecheckPat(idpat(nil),listOf(_),[]) :- !.
 
 typecheckPat(idpat(Name),A,[(Name,A)]) :- !.
 
-typecheckPat(infixpat(::, H, T), listOf(A), Env) :- typecheckPat(H, A, HEnv), typecheckPat(T, listOf(A), TEnv), append(HEnv,TEnv, Env).
+typecheckPat(wildcardpat,_,_):-!.
+
+typecheckPat(wildcardpat,A,[A]) :- !.
+
+typecheckPat(infixpat(::,H,T),listOf(A),Env) :- typecheckPat(H,A,HEnv), typecheckPat(T,listOf(A),TEnv), append(HEnv,TEnv,Env).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Other patterns go here.
